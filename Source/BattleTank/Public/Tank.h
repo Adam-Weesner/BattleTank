@@ -8,6 +8,7 @@
 // Forward declarations
 class UTankBarrel;
 class UTankTurret;
+class AProjectile;
 class UTankAimingComponent;
 
 UCLASS()
@@ -23,6 +24,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* turretToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Actions)
+	void Fire();
 	
 protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
@@ -39,4 +43,10 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float LaunchSpeed = 6000;
+
+	UPROPERTY(EditAnywhere, Category = Setup)
+	TSubclassOf<AProjectile> projectileBP;
+
+	// Local barrel reference for spawning projectile
+	UTankBarrel* barrel = nullptr;
 };
