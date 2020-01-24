@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "BattleTank.h"
 
 
@@ -10,10 +11,14 @@ void ATankPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	auto ControlledTank = GetControlledTank();
-	if (!ControlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayController not possesing a tank"));
-	}
+
+	if (!ensure(ControlledTank)) { return; }
+
+	auto aimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+
+	if (!ensure(aimingComponent)) { return; }
+
+	FoundAimingComponent(aimingComponent);
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -29,7 +34,7 @@ ATank* ATankPlayerController::GetControlledTank() const
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
+	if (!ensure(GetControlledTank())) { return; }
 
 	FVector HitLocation; // Out parameter
 	if (GetSightRayHitLocation(HitLocation)) // Has "side-effect", is going to line trace

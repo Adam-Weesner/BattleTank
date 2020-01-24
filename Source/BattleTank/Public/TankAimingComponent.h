@@ -6,9 +6,18 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankAimingComponent.generated.h"
 
+UENUM()
+enum class EFiringStatus : uint8
+{
+	Reloading,
+	Aiming,
+	Locked
+};
+
 // Forward declaration
 class UTankBarrel;
 class UTankTurret;
+class AProjectile;
 
 // Holds barrel's properties
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -20,14 +29,30 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	void SetTurretReference(UTankTurret* turretToSet);
-	void AimAt(FVector HitLocation, float LaunchSpeed);
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialize(UTankBarrel* barrelToSet, UTankTurret* turretToSet);
+
+	void AimAt(FVector HitLocation);
+	void Fire();
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EFiringStatus firingState = EFiringStatus::Aiming;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 6000;
+
+	UPROPERTY(EditDefaultsOnly)
+	float reloadTimeInSeconds = 3.0f;
 
 private:
-	UTankBarrel* Barrel = nullptr;
-	UTankTurret* turret = nullptr;
-	
 	void MoveBarrelTowards(FVector AimDirection);
 
+	UTankBarrel* barrel = nullptr;
+	UTankTurret* turret = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> projectileBP;
+
+	double lastFireTime = 0.0f;
 };
