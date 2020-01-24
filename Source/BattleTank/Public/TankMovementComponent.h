@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void IntendMoveRight(float Throw);
 
+	// TODO Check best protection
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
+
 private:
 	UTankTrack* leftTrack = nullptr;
 	UTankTrack* rightTrack = nullptr;
