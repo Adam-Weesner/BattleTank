@@ -11,7 +11,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UTankAimingComponent::Initialize(UTankBarrel* barrelToSet, UTankTurret* turretToSet)
@@ -40,8 +40,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	);
 	if (bHaveAimSolution)
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(AimDirection);
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards();
 	}
 }
 
@@ -66,7 +66,7 @@ void UTankAimingComponent::Fire()
 	}
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelTowards()
 {
 	if (!ensure(barrel && turret)) { return; }
 
@@ -75,7 +75,47 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator = AimDirection.Rotation();
 	// Change in elevation
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	auto yawRotation = FMath::Abs(DeltaRotator.Yaw);
+
+	// Always yaw the shortest way.
+	if (yawRotation < 180)
+	{
+		yawRotation *= -1;
+	}
 
 	barrel->Elevate(DeltaRotator.Pitch);
-	turret->Rotate(DeltaRotator.Yaw);
+
+	turret->Rotate(yawRotation);
+}
+
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(barrel)) { return false; }
+
+	return barrel->GetForwardVector().Equals(AimDirection, 0.01f);
+}
+
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// So that first fire is after initial reload
+	lastFireTime = FPlatformTime::Seconds();
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	if ((GetWorld()->GetTimeSeconds() - lastFireTime) > reloadTimeInSeconds)
+	{
+		firingState = EFiringStatus::Reloading;
+	}
+	else if (IsBarrelMoving())
+	{
+		firingState = EFiringStatus::Aiming;
+	}
+	else
+	{
+		firingState = EFiringStatus::Locked;
+	}
 }

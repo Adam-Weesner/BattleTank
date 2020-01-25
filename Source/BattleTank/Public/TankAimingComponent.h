@@ -38,8 +38,11 @@ public:
 	void AimAt(FVector HitLocation);
 
 protected:
+	void BeginPlay() override;
+	void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringStatus firingState = EFiringStatus::Aiming;
+	EFiringStatus firingState = EFiringStatus::Reloading;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 6000;
@@ -48,7 +51,10 @@ protected:
 	float reloadTimeInSeconds = 3.0f;
 
 private:
-	void MoveBarrelTowards(FVector AimDirection);
+	void MoveBarrelTowards();
+
+	// Is the barrel parallel to the aim direction, then barrel is not moving
+	bool IsBarrelMoving();
 
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;
@@ -57,4 +63,5 @@ private:
 	TSubclassOf<AProjectile> projectileBP;
 
 	double lastFireTime = 0.0f;
+	FVector AimDirection;
 };
