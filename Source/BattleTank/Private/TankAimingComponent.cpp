@@ -77,7 +77,7 @@ void UTankAimingComponent::Fire()
 }
 
  
-int UTankAimingComponent::GetAmmoLeft() const
+int32 UTankAimingComponent::GetAmmoLeft() const
 {
 	return ammoCount;
 }

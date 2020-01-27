@@ -37,7 +37,7 @@ public:
 	void Fire();
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	int GetAmmoLeft() const;
+	int32 GetAmmoLeft() const;
 
 	void AimAt(FVector HitLocation);
 
@@ -53,11 +53,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 6000;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float reloadTimeInSeconds = 3.0f;
 
-	UPROPERTY(EditDefaultsOnly)
-	int ammoCount = 3;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 ammoCount = 3;
 
 private:
 	void MoveBarrelTowards();
