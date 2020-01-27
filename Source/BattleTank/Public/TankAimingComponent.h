@@ -11,7 +11,8 @@ enum class EFiringStatus : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 // Forward declaration
@@ -35,7 +36,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	int GetAmmoLeft() const;
+
 	void AimAt(FVector HitLocation);
+
+	EFiringStatus GerFiringState() const;
 
 protected:
 	void BeginPlay() override;
@@ -49,6 +55,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float reloadTimeInSeconds = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly)
+	int ammoCount = 3;
 
 private:
 	void MoveBarrelTowards();
