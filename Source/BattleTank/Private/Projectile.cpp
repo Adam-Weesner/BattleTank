@@ -3,7 +3,8 @@
 #include "Projectile.h"
 #include "BattleTank.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystemComponent.h" 	
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -53,6 +54,27 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	impactBlast->Activate();
 
 	explosionForce->FireImpulse();
+	SetRootComponent(impactBlast);
+	collisionMesh->DestroyComponent();
+
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		projectileDamage,
+		GetActorLocation(),
+		explosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>()
+	);
+
+	FTimerHandle timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &AProjectile::DestroyProjectile, destroyDelay);
+}
+
+
+
+void AProjectile::DestroyProjectile()
+{
+	Destroy();
 }
 
 // Called every frame

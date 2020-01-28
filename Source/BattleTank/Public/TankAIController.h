@@ -19,4 +19,13 @@ private:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	// Called when pawn is possessed;
+	virtual void SetPawn(APawn* InPawn) override;
+
+	UFUNCTION()
+	void OnTankDeath();
+
+	UFUNCTION()
+	void OnPlayerTankDeath();
 };

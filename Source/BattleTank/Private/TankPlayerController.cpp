@@ -2,22 +2,42 @@
 
 #include "TankPlayerController.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 #include "BattleTank.h"
-
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) { return; }
 	FoundAimingComponent(AimingComponent);
 }
+
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick( DeltaTime );
 	AimTowardsCrosshair();
 }
+
+
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+
+	auto owningTank = Cast<ATank>(InPawn);
+	if (!ensure(owningTank)) { return; }
+	owningTank->OnTankDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
+}
+
+void ATankPlayerController::OnTankDeath()
+{
+	UE_LOG(LogTemp, Error, TEXT("Our %s is dead!"), *GetPawn()->GetName());
+
+	StartSpectatingOnly();
+}
+
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
@@ -34,6 +54,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 		aimingComponent->AimAt(HitLocation);
 	}
 }
+
 
 // Get world location of linetrace through crosshair, true if hits landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
@@ -54,6 +75,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	return false;
 }
 
+
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
 {
 	FHitResult HitResult;
@@ -72,6 +94,7 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 	HitLocation = FVector(0);
 	return false; // Line trace didn't succeed
 }
+
 
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
 {

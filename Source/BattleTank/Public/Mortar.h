@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Tank.h"
 #include "Mortar.generated.h"
 
 UCLASS()
-class BATTLETANK_API AMortar : public APawn
+class BATTLETANK_API AMortar : public ATank
 {
 	GENERATED_BODY()
 
@@ -15,10 +16,6 @@ public:
 	// Sets default values for this pawn's properties
 	AMortar();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-
+private:
+	int32 Mortar_StartingHealth = 100;
 };

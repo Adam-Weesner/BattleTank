@@ -57,7 +57,7 @@ protected:
 	float reloadTimeInSeconds = 3.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 ammoCount = 3;
+	int32 ammoCount = 12;
 
 private:
 	void MoveBarrelTowards();

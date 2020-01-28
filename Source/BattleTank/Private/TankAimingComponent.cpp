@@ -52,7 +52,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(barrel)) { return; }
+	if (!ensure(barrel && projectileBP)) { return; }
 
 	if (firingState == EFiringStatus::Locked || firingState == EFiringStatus::Aiming)
 	{
