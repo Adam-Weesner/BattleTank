@@ -25,7 +25,7 @@ void ATankAIController::Tick(float DeltaTime)
 	if (!ensure(playerTank)) { return; }
 
 	// Move towards the player
-	MoveToActor(playerTank, acceptanceRadius); // TODO Check radius is in cm
+	MoveToActor(playerTank, acceptanceRadius);
 		
 	// Aim towards the player
 	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
@@ -44,18 +44,19 @@ void ATankAIController::SetPawn(APawn* InPawn)
 
 	// On own tank's death
 	auto owningTank = Cast<ATank>(InPawn);
-	if (!ensure(owningTank)) { return; }
+	if (!owningTank) { return; }
 	owningTank->OnTankDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
 }
 
 
 void ATankAIController::OnTankDeath()
 {
+	if (!GetPawn()) { return; }
 	UE_LOG(LogTemp, Error, TEXT("AI %s is dead!"), *GetPawn()->GetName());
 	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
 void ATankAIController::OnPlayerTankDeath()
 {
-	UE_LOG(LogTemp, Error, TEXT("Player's %s is dead!"), *GetPawn()->GetName());
+	UE_LOG(LogTemp, Error, TEXT("%s: Player tank is dead!"), *GetPawn()->GetName());
 }
