@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "Projectile.generated.h"
 
 // Forward declarations
@@ -38,6 +39,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Setup")
 	UParticleSystemComponent* impactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Setup")
+	URadialForceComponent* explosionForce = nullptr;
 
 private:
 	UFUNCTION()

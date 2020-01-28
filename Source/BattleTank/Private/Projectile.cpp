@@ -25,6 +25,9 @@ AProjectile::AProjectile()
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	projectileMovement->bAutoActivate = false;
+
+	explosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	explosionForce->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +51,8 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 {
 	launchBlast->Deactivate();
 	impactBlast->Activate();
+
+	explosionForce->FireImpulse();
 }
 
 // Called every frame
