@@ -19,8 +19,21 @@ AProjectile::AProjectile()
 	launchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
 	launchBlast->SetupAttachment(RootComponent);
 
+	impactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
+	impactBlast->SetupAttachment(RootComponent);
+	impactBlast->bAutoActivate = false;
+
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	projectileMovement->bAutoActivate = false;
+}
+
+// Called when the game starts or when spawned
+void AProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// If collision mesh detects a hit, then activate hit function
+	collisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::LaunchProjectile(float speed)
@@ -29,17 +42,17 @@ void AProjectile::LaunchProjectile(float speed)
 	projectileMovement->Activate();
 }
 
-// Called when the game starts or when spawned
-void AProjectile::BeginPlay()
-{
-	Super::BeginPlay();
 
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	launchBlast->Deactivate();
+	impactBlast->Activate();
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
