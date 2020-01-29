@@ -14,16 +14,28 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// So that first fire is after initial reload
+	lastFireTime = FPlatformTime::Seconds();
+}
+
+
 void UTankAimingComponent::Initialize(UTankBarrel* barrelToSet, UTankTurret* turretToSet)
 {
 	barrel = barrelToSet;
 	turret = turretToSet;
 }
 
+
 EFiringStatus UTankAimingComponent::GerFiringState() const
 {
 	return firingState;
 }
+
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
@@ -49,6 +61,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		MoveBarrelTowards();
 	}
 }
+
 
 void UTankAimingComponent::Fire()
 {
@@ -82,6 +95,7 @@ int32 UTankAimingComponent::GetAmmoLeft() const
 	return ammoCount;
 }
 
+
 void UTankAimingComponent::MoveBarrelTowards()
 {
 	if (!ensure(barrel && turret)) { return; }
@@ -114,13 +128,6 @@ bool UTankAimingComponent::IsBarrelMoving()
 	return barrel->GetForwardVector().Equals(AimDirection, 0.01f);
 }
 
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// So that first fire is after initial reload
-	lastFireTime = FPlatformTime::Seconds();
-}
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
