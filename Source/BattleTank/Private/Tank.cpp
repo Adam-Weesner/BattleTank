@@ -4,7 +4,6 @@
 #include "BattleTank.h"
 #include "TankBarrel.h"
 
-
 // Sets default values
 ATank::ATank()
 {

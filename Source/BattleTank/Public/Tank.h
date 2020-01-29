@@ -6,6 +6,7 @@
 #include "Tank.generated.h" // Put new includes above
 
 // Forward declarations
+class ASprungWheel;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTankDeath);
 
@@ -35,4 +36,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 CurrentHealth; // Initialized in BeginPlay()
+
+	ASprungWheel* SprungWheel = nullptr;
 };
