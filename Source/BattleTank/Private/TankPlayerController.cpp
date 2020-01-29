@@ -29,14 +29,14 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 	Super::SetPawn(InPawn);
 
 	auto owningTank = Cast<ATank>(InPawn);
-	if (!ensure(owningTank)) { return; }
+
+	if (!owningTank) { return; }
+
 	owningTank->OnTankDeath.AddUniqueDynamic(this, &ATankPlayerController::OnTankDeath);
 }
 
 void ATankPlayerController::OnTankDeath()
 {
-	UE_LOG(LogTemp, Error, TEXT("Our %s is dead!"), *GetPawn()->GetName());
-
 	StartSpectatingOnly();
 }
 

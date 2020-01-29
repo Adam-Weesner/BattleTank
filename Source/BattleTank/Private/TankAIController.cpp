@@ -11,8 +11,11 @@ void ATankAIController::BeginPlay()
 
 	// On player tank's death
 	if (!ensure(GetWorld()->GetFirstPlayerController()->GetPawn())) { return; }
+
 	auto playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
 	if (!ensure(playerTank)) { return; }
+
 	playerTank->OnTankDeath.AddUniqueDynamic(this, &ATankAIController::OnPlayerTankDeath);
 }
 
@@ -54,11 +57,11 @@ void ATankAIController::SetPawn(APawn* InPawn)
 void ATankAIController::OnTankDeath()
 {
 	if (!GetPawn()) { return; }
-	UE_LOG(LogTemp, Error, TEXT("AI %s is dead!"), *GetPawn()->GetName());
+
 	GetPawn()->DetachFromControllerPendingDestroy();
 }
 
 void ATankAIController::OnPlayerTankDeath()
 {
-	UE_LOG(LogTemp, Error, TEXT("%s: Player tank is dead!"), *GetPawn()->GetName());
+
 }

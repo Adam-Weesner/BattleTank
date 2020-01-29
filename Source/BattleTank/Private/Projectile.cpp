@@ -15,7 +15,7 @@ AProjectile::AProjectile()
 	collisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
 	SetRootComponent(collisionMesh);
 	collisionMesh->SetNotifyRigidBodyCollision(true);
-	collisionMesh->SetVisibility(false);
+	collisionMesh->SetVisibility(true);
 
 	launchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
 	launchBlast->SetupAttachment(RootComponent);
@@ -76,6 +76,7 @@ void AProjectile::DestroyProjectile()
 {
 	Destroy();
 }
+
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)

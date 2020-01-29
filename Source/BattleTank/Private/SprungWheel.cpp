@@ -80,7 +80,6 @@ void ASprungWheel::SetupConstraints()
 
 void ASprungWheel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Onhit %f"), GetWorld()->GetDeltaSeconds());
 	ApplyForce();
 }
 
